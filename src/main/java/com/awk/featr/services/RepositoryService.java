@@ -83,5 +83,20 @@ public class RepositoryService {
 
         return featureFiles;
     }
+
+    public List<String> listFeaturesAsStrings() {
+        List<String> featureFiles = new ArrayList<>();
+        try {
+            URI localRepoUri = localRepoPath.toURI();
+            featureFiles = listFeatureFiles().stream()
+                    .map(path -> localRepoUri.relativize(path.toUri()).getPath())
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return featureFiles;
+    }
 }
 

@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.awk.featr.services.RepositoryService;
 
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,27 +27,16 @@ public class FeatureController {
         this.featureService = featureSvc;
     }
 
-    @GetMapping("/feature-files")
-    public List<String> listFeaturesAsStrings() {
-        List<String> featureFiles = new ArrayList<>();
-        try {
-            URI localRepoUri = repoService.getLocalRepoPath().toURI();
-            featureFiles = repoService.listFeatureFiles().stream()
-                .map(path -> localRepoUri.relativize(path.toUri()).getPath())
-                .collect(Collectors.toList());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return featureFiles;
-    }
-
     @GetMapping("/features")
     public List<Feature> listFeatures() {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO,"listFeatures()");
         return repoService.listFeatureFiles().stream()
                 .map( path -> featureService.getFeature(path) )
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/feature-files")
+    public List<String> listFeaturesAsStrings() {
+        return repoService.listFeaturesAsStrings();
     }
 }
