@@ -44,7 +44,7 @@ public class FeatureController {
         List<String> featureFiles = new ArrayList<>();
         try {
             URI localRepoUri = repoService.getLocalRepoPath().toURI();
-            featureFiles = listFeatureFiles().stream()
+            featureFiles = repoService.listFeatureFiles().stream()
                 .map(path -> localRepoUri.relativize(path.toUri()).getPath())
                 .collect(Collectors.toList());
 
@@ -58,27 +58,9 @@ public class FeatureController {
     @GetMapping("/features")
     public List<Feature> listFeatures() {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO,"listFeatures()");
-        return listFeatureFiles().stream()
+        return repoService.listFeatureFiles().stream()
                 .map( path -> getFeature(path) )
                 .collect(Collectors.toList());
-    }
-
-    @GetMapping("/feature-files2")
-    private List<Path> listFeatureFiles() {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO,"listFeatureFiles()");
-        List<Path> featureFiles = new ArrayList<>();
-        try {
-            URI localRepoUri = repoService.getLocalRepoPath().toURI();
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO,"listFeatureFiles() - localRepoUri: " + localRepoUri);
-
-            featureFiles = Files.walk(Paths.get(localRepoUri))
-                    .filter(file -> file.getFileName().toString().endsWith(".feature"))
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return featureFiles;
     }
 
     private Feature getFeature(Path featureFile) {
