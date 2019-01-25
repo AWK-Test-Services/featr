@@ -10,10 +10,12 @@ public class FeatureChildBuilder {
 
     private String name;
     private List<Step> steps;
+    private String description;
 
     public FeatureChildBuilder(String name) {
         this.name = name;
         this.steps = new ArrayList<>();
+        this.description = "";
     }
 
     public FeatureChildBuilder withName(String name) {
@@ -26,7 +28,12 @@ public class FeatureChildBuilder {
         return this;
     }
 
+    public FeatureChildBuilder withDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
     public Scenario build() {
-        return new Scenario(name, steps);
+        return new Scenario(name, steps, description);
     }
 }

@@ -55,6 +55,7 @@ public class FeatureService {
 
         FeatureChildBuilder scenarioBuilder = new FeatureChildBuilder( featureChild.getScenario().getName() );
         scenarioBuilder.withSteps(stepList);
+        scenarioBuilder.withDescription(featureChild.getScenario().getDescription());
 
         return scenarioBuilder.build();
     }
