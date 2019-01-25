@@ -18,8 +18,9 @@ public class IndexController {
 	}
 
 	@GetMapping("/version")
-	public String version() {
+	public @ResponseBody String version() {
 
+//    	return version;
 		JSONObject versionJson = new JSONObject();
 		versionJson.put("version", version);
 		return versionJson.toString();

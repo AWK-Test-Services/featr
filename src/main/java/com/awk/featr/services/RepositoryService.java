@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -67,7 +68,13 @@ public class RepositoryService {
         }
     }
 
-    public List<Path> listFeatureFiles() {
+    public List<Path> listFeatureFiles(Optional<Long> maxOptionalSize ) {
+        Long maxSize = maxOptionalSize.orElse(10L);
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeatureFiles( " + maxSize + " )");
+        return listFeatureFiles().stream().limit(maxSize).collect(Collectors.toList());
+    }
+
+    private List<Path> listFeatureFiles() {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeatureFiles()");
         List<Path> featureFiles = new ArrayList<>();
         try {

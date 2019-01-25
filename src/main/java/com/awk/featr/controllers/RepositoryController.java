@@ -4,6 +4,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.awk.featr.services.RepositoryException;
 import com.awk.featr.services.RepositoryService;
@@ -22,7 +23,7 @@ public class RepositoryController {
 	}
 
     @GetMapping("/clone")
-    public String cloneRepository() {
+    public @ResponseBody String cloneRepository() {
         JSONObject statusJson = new JSONObject();
 
         try {
@@ -38,7 +39,7 @@ public class RepositoryController {
     }
 
     @GetMapping("/delete")
-	public String deleteRepository() {
+	public @ResponseBody String deleteRepository() {
         JSONObject statusJson = new JSONObject();
 
         try {
