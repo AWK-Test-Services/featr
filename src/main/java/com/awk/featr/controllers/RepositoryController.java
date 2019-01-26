@@ -1,5 +1,6 @@
 package com.awk.featr.controllers;
 
+import com.awk.featr.configuration.RepositoryConfiguration;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,12 +14,12 @@ import com.awk.featr.services.RepositoryService;
 @RestController
 public class RepositoryController {
 
-    private static String repoUri = "git@server:/repositories/dctnry.git";
-
     private RepositoryService repoService;
+    private RepositoryConfiguration config;
 
     @Autowired
-	public RepositoryController( RepositoryService repoSvc ) {
+	public RepositoryController(RepositoryConfiguration config, RepositoryService repoSvc ) {
+        this.config = config;
         this.repoService = repoSvc;
 	}
 
@@ -27,7 +28,7 @@ public class RepositoryController {
         JSONObject statusJson = new JSONObject();
 
         try {
-            repoService.cloneRepository( repoUri );
+            repoService.cloneRepository( config );
             statusJson.put("result", "OK");
         } catch (RepositoryException e) {
             e.printStackTrace();
@@ -43,7 +44,7 @@ public class RepositoryController {
         JSONObject statusJson = new JSONObject();
 
         try {
-            repoService.deleteRepository();
+            repoService.deleteRepository( config );
             statusJson.put("result", "OK");
         } catch (RepositoryException e) {
             e.printStackTrace();

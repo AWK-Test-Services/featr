@@ -10,7 +10,6 @@ import io.cucumber.messages.Messages;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,14 +48,22 @@ public class FeatureService {
     }
 
     private Scenario convertScenario(Messages.FeatureChild featureChild ) {
-        Step testStep = new Step("Step text");
-        ArrayList<Step> stepList = new ArrayList<>();
-        stepList.add(testStep);
+        Messages.Scenario scenario = featureChild.getScenario();
 
-        FeatureChildBuilder scenarioBuilder = new FeatureChildBuilder( featureChild.getScenario().getName() );
-        scenarioBuilder.withSteps(stepList);
-        scenarioBuilder.withDescription(featureChild.getScenario().getDescription());
+        FeatureChildBuilder scenarioBuilder = new FeatureChildBuilder( scenario.getName() )
+                .withSteps(convertSteps( scenario.getStepsList() ))
+                .withDescription(scenario.getDescription());
 
         return scenarioBuilder.build();
+    }
+
+    private List<Step> convertSteps(List<Messages.Step> stepsList) {
+        return stepsList.stream()
+                .map( step -> convertStep(step) )
+                .collect(Collectors.toList());
+    }
+
+    private Step convertStep(Messages.Step step) {
+        return new Step( step.getText() );
     }
 }

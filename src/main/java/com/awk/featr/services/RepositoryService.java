@@ -1,17 +1,11 @@
 package com.awk.featr.services;
 
-import com.awk.featr.model.Feature;
-import com.awk.featr.model.builder.FeatureBuilder;
-import io.cucumber.gherkin.Gherkin;
-import io.cucumber.messages.Messages;
+import com.awk.featr.configuration.RepositoryConfiguration;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -24,61 +18,48 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.requireNonNull;
-
-@Configuration
 @Service
 public class RepositoryService {
-    private File localRepoPath;
 
-    public RepositoryService() {
-    }
+//    @Autowired
+//    public RepositoryService() {}
 
-    @Value("${featr.localRepoPath}")
-    public void setLocalRepoPath(String localRepoPathString) {
-        this.localRepoPath = new File(requireNonNull(localRepoPathString));
-    }
-
-    public File getLocalRepoPath() {
-        return localRepoPath;
-    }
-
-    public void cloneRepository(String repoUri) throws RepositoryException {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "cloneRepository( " + repoUri + " )");
+    public void cloneRepository(RepositoryConfiguration config) throws RepositoryException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "cloneRepository( " + config.getRepoLocation() + " )");
 
         try {
             Git.cloneRepository()
-                    .setURI(repoUri)
-                    .setDirectory(localRepoPath)
+                    .setURI(config.getRepoLocation())
+                    .setDirectory(config.getLocalRepoPath())
                     .call();
         } catch (GitAPIException e) {
             e.printStackTrace();
-            throw new RepositoryException("Error cloning repo " + repoUri + " to " + localRepoPath + ", " + e.getMessage(), e);
+            throw new RepositoryException("Error cloning repo " + config.getRepoLocation() + " to " + config.getLocalRepoPath() + ", " + e.getMessage(), e);
         }
     }
 
-    public void deleteRepository() throws RepositoryException {
+    public void deleteRepository(RepositoryConfiguration config) throws RepositoryException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "deleteRepository()");
 
         try {
-            FileUtils.deleteDirectory(localRepoPath);
+            FileUtils.deleteDirectory(config.getLocalRepoPath());
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RepositoryException("Error deleting repo at " + localRepoPath + ", " + e.getMessage(), e);
+            throw new RepositoryException("Error deleting repo at " + config.getLocalRepoPath() + ", " + e.getMessage(), e);
         }
     }
 
-    public List<Path> listFeatureFiles(Optional<Long> maxOptionalSize ) {
+    public List<Path> listFeatureFiles(RepositoryConfiguration config, Optional<Long> maxOptionalSize ) {
         Long maxSize = maxOptionalSize.orElse(10L);
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeatureFiles( " + maxSize + " )");
-        return listFeatureFiles().stream().limit(maxSize).collect(Collectors.toList());
+        return listFeatureFiles(config).stream().limit(maxSize).collect(Collectors.toList());
     }
 
-    private List<Path> listFeatureFiles() {
+    private List<Path> listFeatureFiles(RepositoryConfiguration config) {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeatureFiles()");
         List<Path> featureFiles = new ArrayList<>();
         try {
-            URI localRepoUri = localRepoPath.toURI();
+            URI localRepoUri = config.getLocalRepoPath().toURI();
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeatureFiles() - localRepoUri: " + localRepoUri);
 
             featureFiles = Files.walk(Paths.get(localRepoUri))
@@ -91,11 +72,11 @@ public class RepositoryService {
         return featureFiles;
     }
 
-    public List<String> listFeaturesAsStrings() {
+    public List<String> listFeaturesAsStrings(RepositoryConfiguration config) {
         List<String> featureFiles = new ArrayList<>();
         try {
-            URI localRepoUri = localRepoPath.toURI();
-            featureFiles = listFeatureFiles().stream()
+            URI localRepoUri = config.getLocalRepoPath().toURI();
+            featureFiles = listFeatureFiles(config).stream()
                     .map(path -> localRepoUri.relativize(path.toUri()).getPath())
                     .collect(Collectors.toList());
 
