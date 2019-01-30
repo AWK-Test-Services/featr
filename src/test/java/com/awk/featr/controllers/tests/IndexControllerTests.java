@@ -8,7 +8,7 @@ import com.awk.featr.controllers.IndexController;
 
 @RunWith(SpringRunner.class)
 public class IndexControllerTests {
-	private IndexController indexController = new IndexController();
+//	private IndexController indexController = new IndexController();
 
 
 	@Before

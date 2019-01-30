@@ -1,9 +1,11 @@
 package com.awk.featr.services;
 
 import com.awk.featr.configuration.RepositoryConfiguration;
+import com.awk.featr.model.registries.FeatureRegistry;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -13,16 +15,25 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
+
 @Service
 public class RepositoryService {
 
-//    @Autowired
-//    public RepositoryService() {}
+    private FeatureRegistry featureRegistry;
+
+    @Autowired
+    public RepositoryService(FeatureRegistry featureRegistry) {
+        this.featureRegistry = requireNonNull(featureRegistry);
+    }
+
+//    public void readFeatureFiles(){
+//
+//    }
 
     public void cloneRepository(RepositoryConfiguration config) throws RepositoryException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "cloneRepository( " + config.getRepoLocation() + " )");
@@ -49,13 +60,7 @@ public class RepositoryService {
         }
     }
 
-    public List<Path> listFeatureFiles(RepositoryConfiguration config, Optional<Long> maxOptionalSize ) {
-        Long maxSize = maxOptionalSize.orElse(10L);
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeatureFiles( " + maxSize + " )");
-        return listFeatureFiles(config).stream().limit(maxSize).collect(Collectors.toList());
-    }
-
-    private List<Path> listFeatureFiles(RepositoryConfiguration config) {
+    public List<Path> listFeatureFiles(RepositoryConfiguration config) {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeatureFiles()");
         List<Path> featureFiles = new ArrayList<>();
         try {
