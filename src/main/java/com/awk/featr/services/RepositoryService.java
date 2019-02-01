@@ -31,10 +31,6 @@ public class RepositoryService {
         this.featureRegistry = requireNonNull(featureRegistry);
     }
 
-//    public void readFeatureFiles(){
-//
-//    }
-
     public void cloneRepository(RepositoryConfiguration config) throws RepositoryException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "cloneRepository( " + config.getRepoLocation() + " )");
 

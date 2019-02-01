@@ -1,0 +1,42 @@
+server:
+  port: 8084
+  contextPath: /
+
+featr:
+  version: @project.version@
+  adminPassword: help
+  testTypes:
+    - functional
+    - performance
+    - security
+  testLevels:
+    - unit
+    - integration
+    - end-to-end
+  repositories:
+    id001:
+      remote: git@server:/repositories/dctnry.git
+      local: /repos/Dictionary/dctnry
+    id002:
+      remote: git@server:/repositories/dctnry-client.git
+      local: /repos/Dictionary/front-end
+
+  testSet:
+    dictionary:
+      repository: id001
+      featureType: gherkin
+      regexp: \*.feature
+      type: functional
+      level: integration
+    front-end-unit:
+      repository: id002
+      featureType: javascript
+      regexp: test/**/*.spec.js
+      type: functional
+      level: unit
+    front-end-integration:
+      repository: id002
+      featureType: javascript
+      regexp: browserTests/**/*.spec.js
+      type: functional
+      level: integration

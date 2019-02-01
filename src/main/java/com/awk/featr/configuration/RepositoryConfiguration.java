@@ -1,33 +1,42 @@
 package com.awk.featr.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.File;
 
 import static java.util.Objects.requireNonNull;
 
-@Configuration
 public class RepositoryConfiguration {
 
-    private static String repoUri = "git@server:/repositories/dctnry.git";
+    private String id;
 
+    private File local;
 
-    private File localRepoPath;
+    private String remote;
 
-//    private String remoteRepoLocation;
+    public String getId() {
+        return id;
+    }
 
-
-    @Value("${featr.localRepoPath}")
-    public void setLocalRepoPath(String localRepoPathString) {
-        this.localRepoPath = new File(requireNonNull(localRepoPathString));
+    public void setId(String id) {
+        this.id = id;
     }
 
     public File getLocalRepoPath() {
-        return localRepoPath;
+        return local;
+    }
+
+    public void setLocal(String localRepoPathString) {
+        this.local = new File(requireNonNull(localRepoPathString));
     }
 
     public String getRepoLocation() {
-        return repoUri;
+        return remote;
+    }
+
+    public void setRemote(String remote) {
+        this.remote = remote;
     }
 }
