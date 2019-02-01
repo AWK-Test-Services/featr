@@ -4,7 +4,7 @@ server:
 
 featr:
   version: @project.version@
-  adminPassword: help
+  adminPassword: 2change
   testTypes:
     - functional
     - performance
@@ -21,22 +21,22 @@ featr:
       remote: git@server:/repositories/dctnry-client.git
       local: /repos/Dictionary/front-end
 
-  testSet:
+  testSets:
     dictionary:
       repository: id001
-      featureType: gherkin
+      testFileType: gherkin
       regexp: \*.feature
       type: functional
       level: integration
     front-end-unit:
       repository: id002
-      featureType: javascript
+      testFileType: javascript
       regexp: test/**/*.spec.js
       type: functional
       level: unit
     front-end-integration:
       repository: id002
-      featureType: javascript
+      testFileType: javascript
       regexp: browserTests/**/*.spec.js
       type: functional
       level: integration

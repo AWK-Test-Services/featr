@@ -1,9 +1,5 @@
 package com.awk.featr.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-
 import java.io.File;
 
 import static java.util.Objects.requireNonNull;
