@@ -48,7 +48,7 @@ public class FeatureController {
     public @ResponseBody Collection<TestSetConfiguration> listSettings() {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO,"listSettings()");
 
-        return configuration.getTestSetCollection();
+        return configuration.getTestSets();
     }
 
     @GetMapping("/features/listfiles")

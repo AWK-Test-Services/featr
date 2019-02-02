@@ -4,7 +4,11 @@ import com.awk.featr.model.TestFileType;
 import com.awk.featr.model.TestLevel;
 import com.awk.featr.model.TestType;
 
+import static java.util.Objects.requireNonNull;
+
 public class TestSetConfiguration {
+    private String id;
+
     private String repoConfigId;
 
     private TestFileType testFileType;
@@ -14,6 +18,14 @@ public class TestSetConfiguration {
     private TestType type;
 
     private TestLevel level;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = requireNonNull(id);
+    }
 
     public String getRepoConfigId() {
         return repoConfigId;

@@ -22,19 +22,19 @@ featr:
       local: /repos/Dictionary/front-end
 
   testSets:
-    dictionary:
+    - id: dictionary
       repository: id001
       testFileType: gherkin
       regExp: \*.feature
       type: functional
       level: integration
-    front-end-unit:
+    - id: front-end-unit
       repository: id002
       testFileType: javascript
       regExp: test/**/*.spec.js
       type: functional
       level: unit
-    front-end-integration:
+    - id: front-end-integration
       repository: id002
       testFileType: javascript
       regExp: browserTests/**/*.spec.js

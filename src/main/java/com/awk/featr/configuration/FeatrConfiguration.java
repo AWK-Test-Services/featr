@@ -1,6 +1,5 @@
 package com.awk.featr.configuration;
 
-import com.awk.featr.model.Feature;
 import com.awk.featr.model.TestLevel;
 import com.awk.featr.model.TestType;
 import com.awk.featr.services.RepositoryException;
@@ -28,7 +27,7 @@ public class FeatrConfiguration {
 
     private Map<String, RepositoryConfiguration> repositories = new HashMap<>();
 
-    private Map<String, TestSetConfiguration> testSets = new HashMap<>();
+    private Collection<TestSetConfiguration> testSets = new ArrayList<>();
 
     public String getVersion() {
         return version;
@@ -66,11 +65,7 @@ public class FeatrConfiguration {
         return repositories.get(repoId);
     }
 
-    public Map<String, TestSetConfiguration> getTestSets() {
+    public Collection<TestSetConfiguration> getTestSets() {
         return testSets;
-    }
-
-    public Collection<TestSetConfiguration> getTestSetCollection() {
-        return testSets.values();
     }
 }
