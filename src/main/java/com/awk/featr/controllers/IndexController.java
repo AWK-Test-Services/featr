@@ -4,6 +4,7 @@ import com.awk.featr.configuration.FeatrConfiguration;
 import com.awk.featr.model.TestLevel;
 import com.awk.featr.model.TestType;
 import com.awk.featr.services.FeatureFileService;
+import com.awk.featr.services.IndexingService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +21,14 @@ import static java.util.Objects.requireNonNull;
 @RestController
 public class IndexController {
 
-    @Value("${featr.version}")
-    private String version;
-
     private FeatrConfiguration configuration;
-    private FeatureFileService featureFileService;
+
+    private final IndexingService indexingService;
 
     @Autowired
-	public IndexController(FeatrConfiguration config, FeatureFileService featureFileService) {
+	public IndexController(FeatrConfiguration config, IndexingService indexingService) {
         this.configuration = requireNonNull(config);
-        this.featureFileService = requireNonNull(featureFileService);
+        this.indexingService = requireNonNull(indexingService);
 	}
 
 	@GetMapping("/version")
@@ -37,22 +36,17 @@ public class IndexController {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO,"version()");
 
 		JSONObject versionJson = new JSONObject();
-		versionJson.put("version", version);
+		versionJson.put("version", configuration.getVersion());
 		return versionJson.toString();
 	}
 
 	@GetMapping("/index")
     public @ResponseBody String index() {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO,"index()");
+        indexingService.index();
+
         JSONObject returnJson = new JSONObject();
-        try {
-            configuration.getRepositories()
-                    .forEach((id, featureConfig) -> featureFileService.readFeatureFiles(featureConfig));
-            returnJson.put("result", true);
-        } catch (Exception e) {
-            returnJson.put("result", false);
-            returnJson.put("message", e.getMessage());
-        }
+        returnJson.put("result", true);
         return returnJson.toString();
     }
 

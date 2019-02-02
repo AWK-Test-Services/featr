@@ -25,12 +25,12 @@ public class FeatureFileService {
         this.repoService = requireNonNull(repoService);
     }
 
-    public void readFeatureFiles(RepositoryConfiguration config) {
-        parseFeatureFiles(repoService.listFeatureFiles(config));
+    public void indexFeatureFiles(RepositoryConfiguration config) {
+        indexFeatureFiles(repoService.listFeatureFiles(config));
     }
 
-    private void parseFeatureFiles(List<Path> featureFiles) {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO,"parseFeatureFiles( " + featureFiles.size() + " )");
+    private void indexFeatureFiles(List<Path> featureFiles) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO,"indexFeatureFiles( " + featureFiles.size() + " )");
         featureFiles.stream()
                 .forEach( path -> featureRegistry.add(FeatureFileConverter.getFeature(path)) );
     }
