@@ -9,7 +9,7 @@ public class TestSetConfiguration {
 
     private TestFileType testFileType;
 
-    private String reqExp;
+    private String regExp;
 
     private TestType type;
 
@@ -31,12 +31,12 @@ public class TestSetConfiguration {
         this.testFileType = testFileType;
     }
 
-    public String getReqExp() {
-        return reqExp;
+    public String getRegExp() {
+        return regExp;
     }
 
-    public void setReqExp(String reqExp) {
-        this.reqExp = reqExp;
+    public void setRegExp(String regExp) {
+        this.regExp = regExp;
     }
 
     public TestType getType() {

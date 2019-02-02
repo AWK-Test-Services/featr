@@ -25,18 +25,18 @@ featr:
     dictionary:
       repository: id001
       testFileType: gherkin
-      regexp: \*.feature
+      regExp: \*.feature
       type: functional
       level: integration
     front-end-unit:
       repository: id002
       testFileType: javascript
-      regexp: test/**/*.spec.js
+      regExp: test/**/*.spec.js
       type: functional
       level: unit
     front-end-integration:
       repository: id002
       testFileType: javascript
-      regexp: browserTests/**/*.spec.js
+      regExp: browserTests/**/*.spec.js
       type: functional
       level: integration
