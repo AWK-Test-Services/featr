@@ -1,5 +1,6 @@
 package com.awk.featr.configuration;
 
+import com.awk.featr.model.Feature;
 import com.awk.featr.model.TestLevel;
 import com.awk.featr.model.TestType;
 import com.awk.featr.services.RepositoryException;
@@ -63,5 +64,13 @@ public class FeatrConfiguration {
         }
 
         return repositories.get(repoId);
+    }
+
+    public Map<String, TestSetConfiguration> getTestSets() {
+        return testSets;
+    }
+
+    public Collection<TestSetConfiguration> getTestSetCollection() {
+        return testSets.values();
     }
 }
