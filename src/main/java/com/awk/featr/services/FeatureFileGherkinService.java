@@ -25,7 +25,6 @@ public class FeatureFileGherkinService implements FeatureFileTypeService {
     }
 
     public static Feature getFeature(Path featureFile) {
-        Logger.getLogger(FeatureFileGherkinService.class.getName()).log(Level.INFO,"getFeature( " + featureFile.toString() + " )");
         List<Messages.Wrapper> messages = Gherkin.fromPaths(singletonList(featureFile.toString()), false, true, false);
 
         // Get the AST

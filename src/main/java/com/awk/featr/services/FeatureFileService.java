@@ -29,8 +29,8 @@ public class FeatureFileService {
 
         this.featureFileTypeConverters = new HashMap<>();
         this.featureFileTypeConverters.put(TestFileType.GHERKIN, new FeatureFileGherkinService());
-        this.featureFileTypeConverters.put(TestFileType.JUNIT, new FeatureFileGherkinService());
-        this.featureFileTypeConverters.put(TestFileType.JAVASCRIPT, new FeatureFileGherkinService());
+        this.featureFileTypeConverters.put(TestFileType.JUNIT, new FeatureFileJUnitService());
+        this.featureFileTypeConverters.put(TestFileType.JAVASCRIPT, new FeatureFileJavascriptService());
     }
 
     public Collection<Feature> readFeatures(TestSetConfiguration tsConfig) {
