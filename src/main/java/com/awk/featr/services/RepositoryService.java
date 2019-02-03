@@ -3,9 +3,14 @@ package com.awk.featr.services;
 import com.awk.featr.configuration.FeatrConfiguration;
 import com.awk.featr.configuration.RepositoryConfiguration;
 import com.awk.featr.model.registries.FeatureRegistry;
+import com.jcraft.jsch.Session;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.transport.JschConfigSessionFactory;
+import org.eclipse.jgit.transport.OpenSshConfig;
+import org.eclipse.jgit.transport.SshSessionFactory;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,10 +45,17 @@ public class RepositoryService {
     public void cloneRepository(RepositoryConfiguration config) throws RepositoryException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "cloneRepository( " + config.getRepoLocation() + " )");
 
+        SshSessionFactory.setInstance(new JschConfigSessionFactory() {
+            public void configure(OpenSshConfig.Host hc, Session session) {
+                session.setConfig("StrictHostKeyChecking", "no");
+            }
+        });
+
         try {
             Git.cloneRepository()
                     .setURI(config.getRepoLocation())
                     .setDirectory(config.getLocalRepoPath())
+                    .setCredentialsProvider( new UsernamePasswordCredentialsProvider( "arjan", "etmarkr" ) )
                     .call();
         } catch (GitAPIException e) {
             e.printStackTrace();

@@ -16,10 +16,10 @@ featr:
   repositories:
     id001:
       remote: git@server:/repositories/dctnry.git
-      local: /repos/Dictionary/dctnry
+      local: /repos/dctnry
     id002:
       remote: git@server:/repositories/dctnry-client.git
-      local: /repos/Dictionary/front-end
+      local: /repos/front-end
 
   testSets:
     - id: dictionary
