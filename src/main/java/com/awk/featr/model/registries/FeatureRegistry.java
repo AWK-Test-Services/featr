@@ -18,7 +18,7 @@ public class FeatureRegistry {
     }
 
     public Feature getFeature(String id) {
-        return registry.get(id);
+        return registry.get(requireNonNull(id));
     }
 
     public Feature add(Feature feature) {

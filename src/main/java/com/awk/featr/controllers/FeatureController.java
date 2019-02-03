@@ -2,7 +2,6 @@ package com.awk.featr.controllers;
 
 import com.awk.featr.configuration.FeatrConfiguration;
 import com.awk.featr.configuration.TestSetConfiguration;
-import com.awk.featr.model.registries.FeatureRegistry;
 import com.awk.featr.services.FeatureService;
 import com.awk.featr.model.Feature;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +24,12 @@ public class FeatureController {
     private FeatrConfiguration configuration;
     private RepositoryService repoService;
     private FeatureService featureService;
-    private final FeatureRegistry featureRegistry;
 
     @Autowired
-    public FeatureController(FeatrConfiguration config, RepositoryService repoSvc, FeatureService featureSvc, FeatureRegistry featureRegistry ) {
-        this.configuration = config;
-        this.repoService = repoSvc;
-        this.featureService = featureSvc;
-        this.featureRegistry = requireNonNull(featureRegistry);
+    public FeatureController(FeatrConfiguration config, RepositoryService repoSvc, FeatureService featureSvc ) {
+        this.configuration = requireNonNull(config);
+        this.repoService = requireNonNull(repoSvc);
+        this.featureService = requireNonNull(featureSvc);
     }
 
     @GetMapping("/features/list")
@@ -42,6 +39,13 @@ public class FeatureController {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO,"listFeatures( " + testSetId + ", " + maxSize + " )");
 
         return featureService.getFeatures(maxSize);
+    }
+
+    @GetMapping("/features/details")
+    public @ResponseBody Feature getFeature(@RequestParam("featureId") String featureId) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO,"getFeature( " + featureId + " )");
+
+        return featureService.getFeature(requireNonNull(featureId));
     }
 
     @GetMapping("/features/settings")

@@ -25,4 +25,8 @@ public class FeatureService {
                 .limit(maxSize)
                 .collect(Collectors.toList());
     }
+
+    public Feature getFeature(String featureId) {
+        return featureRegistry.getFeature(requireNonNull(featureId));
+    }
 }

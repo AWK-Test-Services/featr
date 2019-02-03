@@ -1,4 +1,4 @@
-package com.awk.featr.model.converters;
+package com.awk.featr.services;
 
 import com.awk.featr.model.Feature;
 import com.awk.featr.model.Scenario;
@@ -16,9 +16,16 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 
-public class FeatureFileConverter {
+public class FeatureFileGherkinService implements FeatureFileTypeService {
+
+    @Override
+    public Feature readFeature(Path featureFile) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO,"readFeature( " + featureFile.toString() + " )");
+        return getFeature(featureFile);
+    }
+
     public static Feature getFeature(Path featureFile) {
-        Logger.getLogger(FeatureFileConverter.class.getName()).log(Level.INFO,"getFeature( " + featureFile.toString() + " )");
+        Logger.getLogger(FeatureFileGherkinService.class.getName()).log(Level.INFO,"getFeature( " + featureFile.toString() + " )");
         List<Messages.Wrapper> messages = Gherkin.fromPaths(singletonList(featureFile.toString()), false, true, false);
 
         // Get the AST
@@ -59,5 +66,4 @@ public class FeatureFileConverter {
     private static Step convertStep(Messages.Step step) {
         return new Step( step.getText() );
     }
-
 }

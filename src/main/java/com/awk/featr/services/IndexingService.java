@@ -7,18 +7,24 @@ import com.awk.featr.model.registries.FeatureRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Path;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static java.util.Objects.requireNonNull;
 
 @Service
 public class IndexingService {
 
     private final FeatrConfiguration featrConfiguration;
-
+    private final FeatureRegistry featureRegistry;
     private final FeatureFileService featureFileService;
 
     @Autowired
-    public IndexingService(FeatrConfiguration featrConfiguration, FeatureFileService featureFileService) {
+    public IndexingService(FeatrConfiguration featrConfiguration, FeatureRegistry featureRegistry, FeatureFileService featureFileService) {
         this.featrConfiguration = requireNonNull(featrConfiguration);
+        this.featureRegistry = requireNonNull(featureRegistry);
         this.featureFileService = requireNonNull(featureFileService);
     }
 
@@ -28,12 +34,8 @@ public class IndexingService {
     }
 
     private void indexTestSet(TestSetConfiguration tsConfig) {
-        try {
-            RepositoryConfiguration repositoryConfiguration = featrConfiguration.getRepository(tsConfig.getRepoConfigId());
-            featureFileService.indexFeatureFiles(repositoryConfiguration);
-        } catch (RepositoryException e) {
-            // TODO we do want to report (but to whom?)
-            e.printStackTrace();
-        }
+            featureFileService.readFeatures(tsConfig)
+                    .stream()
+                    .forEach( feature -> featureRegistry.add(feature) );
     }
 }

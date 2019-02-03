@@ -3,10 +3,8 @@ package com.awk.featr.controllers;
 import com.awk.featr.configuration.FeatrConfiguration;
 import com.awk.featr.model.TestLevel;
 import com.awk.featr.model.TestType;
-import com.awk.featr.services.FeatureFileService;
 import com.awk.featr.services.IndexingService;
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 

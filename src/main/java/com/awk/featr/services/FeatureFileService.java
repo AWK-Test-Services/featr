@@ -1,37 +1,49 @@
 package com.awk.featr.services;
 
-import com.awk.featr.configuration.RepositoryConfiguration;
-import com.awk.featr.model.converters.FeatureFileConverter;
+import com.awk.featr.configuration.TestSetConfiguration;
+import com.awk.featr.model.Feature;
+import com.awk.featr.model.TestFileType;
 import com.awk.featr.model.registries.FeatureRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
 @Service
 public class FeatureFileService {
 
-    private final FeatureRegistry featureRegistry;
     private final RepositoryService repoService;
 
+    private final Map<TestFileType, FeatureFileTypeService> featureFileTypeConverters;
+
+
     @Autowired
-    public FeatureFileService(FeatureRegistry featureRegistry, RepositoryService repoService) {
-        this.featureRegistry = requireNonNull(featureRegistry);
+    public FeatureFileService(RepositoryService repoService) {
         this.repoService = requireNonNull(repoService);
+
+        this.featureFileTypeConverters = new HashMap<>();
+        this.featureFileTypeConverters.put(TestFileType.GHERKIN, new FeatureFileGherkinService());
+        this.featureFileTypeConverters.put(TestFileType.JUNIT, new FeatureFileGherkinService());
+        this.featureFileTypeConverters.put(TestFileType.JAVASCRIPT, new FeatureFileGherkinService());
     }
 
-    public void indexFeatureFiles(RepositoryConfiguration config) {
-        indexFeatureFiles(repoService.listFeatureFiles(config));
+    public Collection<Feature> readFeatures(TestSetConfiguration tsConfig) {
+        FeatureFileTypeService fileTypeConverter = getFileTypeConverter(tsConfig.getTestFileType());
+
+        Collection<Path> featureFiles = repoService.listFeatureFiles(tsConfig.getRepoConfigId());
+        return featureFiles.stream()
+                .map( filePath -> fileTypeConverter.readFeature(filePath) )
+                .collect(Collectors.toList());
+        }
+
+    private FeatureFileTypeService getFileTypeConverter(TestFileType testFileType) {
+        return featureFileTypeConverters.get(testFileType);
     }
 
-    private void indexFeatureFiles(List<Path> featureFiles) {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO,"indexFeatureFiles( " + featureFiles.size() + " )");
-        featureFiles.stream()
-                .forEach( path -> featureRegistry.add(FeatureFileConverter.getFeature(path)) );
-    }
 }
