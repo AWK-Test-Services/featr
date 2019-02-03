@@ -11,6 +11,8 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
@@ -33,12 +35,14 @@ public class FeatureFileService {
         this.featureFileTypeConverters.put(TestFileType.JAVASCRIPT, new FeatureFileJavascriptService());
     }
 
-    public Collection<Feature> readFeatures(TestSetConfiguration tsConfig) {
+    Collection<Feature> readFeatures(TestSetConfiguration tsConfig) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "readFeatures( " + tsConfig.toString() + " )");
         FeatureFileTypeService fileTypeConverter = getFileTypeConverter(tsConfig.getTestFileType());
+        String fileRegExp = tsConfig.getRegExp();
 
-        Collection<Path> featureFiles = repoService.listFeatureFiles(tsConfig.getRepoConfigId());
+        Collection<Path> featureFiles = repoService.listFeatureFiles(tsConfig.getRepoConfigId(), fileRegExp);
         return featureFiles.stream()
-                .map( filePath -> fileTypeConverter.readFeature(filePath) )
+                .map(fileTypeConverter::readFeature)
                 .collect(Collectors.toList());
         }
 

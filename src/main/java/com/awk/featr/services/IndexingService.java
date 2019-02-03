@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,13 +30,14 @@ public class IndexingService {
     }
 
     public void index() {
-        featrConfiguration.getTestSets().stream()
+        featrConfiguration.getTestSets()
                 .forEach(this::indexTestSet);
     }
 
     private void indexTestSet(TestSetConfiguration tsConfig) {
             featureFileService.readFeatures(tsConfig)
                     .stream()
-                    .forEach( feature -> featureRegistry.add(feature) );
+                    .filter(Objects::nonNull)
+                    .forEach(featureRegistry::add);
     }
 }

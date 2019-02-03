@@ -10,9 +10,9 @@ import com.awk.featr.services.RepositoryService;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -34,8 +34,8 @@ public class FeatureController {
 
     @GetMapping("/features/list")
     public @ResponseBody List<Feature> listFeatures(@RequestParam("testset") String testSetId,
-                                                    @RequestParam("maxSize") Optional<Long> maxOptionalSize) {
-        Long maxSize = maxOptionalSize.orElse(10L);
+                                                    @RequestParam(value="maxSize", required = false) Long maxOptionalSize) {
+        Long maxSize = maxOptionalSize==null ? 10L : maxOptionalSize;
         Logger.getLogger(this.getClass().getName()).log(Level.INFO,"listFeatures( " + testSetId + ", " + maxSize + " )");
 
         return featureService.getFeatures(maxSize);
@@ -56,9 +56,12 @@ public class FeatureController {
     }
 
     @GetMapping("/features/listfiles")
-    public @ResponseBody List<String> listFeaturesAsStrings(@RequestParam("repository") String repoId) {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO,"listFeaturesAsStrings( " + repoId + " )");
-
-        return repoService.listFeaturesAsStrings(configuration.getRepositories().get(repoId));
+    public @ResponseBody List<String> listFeaturesAsStrings() {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO,"listFeaturesAsStrings()");
+        return configuration.getTestSets().stream()
+                .flatMap( testSetConfig ->
+                        repoService.listFeaturesAsStrings( testSetConfig.getRepoConfigId(), testSetConfig.getRegExp() )
+                                .stream() )
+                .collect(Collectors.toList());
     }
 }

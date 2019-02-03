@@ -62,21 +62,22 @@ public class RepositoryService {
         }
     }
 
-    public Collection<Path> listFeatureFiles(String repoConfigId) {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeatureFiles( " + repoConfigId + " )");
+    Collection<Path> listFeatureFiles(String repoConfigId, String fileRegExp) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeatureFiles( " + repoConfigId + ", " + fileRegExp + " )");
         RepositoryConfiguration repositoryConfiguration = configurationMap.get(repoConfigId);
-        return this.listFeatureFiles(repositoryConfiguration);
+        return this.listFeatureFiles(repositoryConfiguration, fileRegExp);
     }
 
-    public List<Path> listFeatureFiles(RepositoryConfiguration config) {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeatureFiles()");
+    private List<Path> listFeatureFiles(RepositoryConfiguration config, String fileRegExp) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeatureFiles( <repoConfig>, " + fileRegExp + " )");
         List<Path> featureFiles = new ArrayList<>();
         try {
             URI localRepoUri = config.getLocalRepoPath().toURI();
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeatureFiles() - localRepoUri: " + localRepoUri);
 
             featureFiles = Files.walk(Paths.get(localRepoUri))
-                    .filter(file -> file.getFileName().toString().endsWith(".feature"))
+                    .filter(file -> localRepoUri.relativize(file.toUri()).getPath().matches(fileRegExp))
+                    .map(this::log)
                     .collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,12 +85,18 @@ public class RepositoryService {
 
         return featureFiles;
     }
+    public List<String> listFeaturesAsStrings(String repoConfigId, String fileRegExp) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeaturesAsStrings( " + repoConfigId + ", " + fileRegExp + " )");
+        RepositoryConfiguration repositoryConfiguration = configurationMap.get(repoConfigId);
+        return this.listFeaturesAsStrings(repositoryConfiguration, fileRegExp);
+    }
 
-    public List<String> listFeaturesAsStrings(RepositoryConfiguration config) {
+    private List<String> listFeaturesAsStrings(RepositoryConfiguration config, String fileRegExp) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "listFeaturesAsStrings( <repoConfig>, " + fileRegExp + " )");
         List<String> featureFiles = new ArrayList<>();
         try {
             URI localRepoUri = config.getLocalRepoPath().toURI();
-            featureFiles = listFeatureFiles(config).stream()
+            featureFiles = listFeatureFiles(config, fileRegExp).stream()
                     .map(path -> localRepoUri.relativize(path.toUri()).getPath())
                     .collect(Collectors.toList());
 
@@ -98,6 +105,11 @@ public class RepositoryService {
         }
 
         return featureFiles;
+    }
+
+    private Path log(Path logentry) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, logentry.toString());
+        return logentry;
     }
 }
 
