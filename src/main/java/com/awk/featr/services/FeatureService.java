@@ -1,6 +1,6 @@
 package com.awk.featr.services;
 
-import com.awk.featr.model.Feature;
+import com.awk.featr.model.gherkin.Feature;
 import com.awk.featr.model.registries.FeatureRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

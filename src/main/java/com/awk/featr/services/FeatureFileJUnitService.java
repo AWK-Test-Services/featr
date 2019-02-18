@@ -1,6 +1,6 @@
 package com.awk.featr.services;
 
-import com.awk.featr.model.Feature;
+import com.awk.featr.model.gherkin.Feature;
 
 import java.nio.file.Path;
 import java.util.logging.Level;

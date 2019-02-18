@@ -1,16 +1,16 @@
-package com.awk.featr.model;
+package com.awk.featr.model.gherkin;
 
 import java.util.List;
 
-public class Scenario {
+public abstract class ScenarioDefinition {
     private final String name;
     private final List<Step> steps;
     private final String description;
 
-    public Scenario(String name, List<Step> steps, String description) {
+    ScenarioDefinition(String name, String description, List<Step> steps) {
         this.name = name;
-        this.steps = steps;
         this.description = description;
+        this.steps = steps;
     }
 
     public String getName() {

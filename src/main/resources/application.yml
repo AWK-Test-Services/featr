@@ -16,27 +16,21 @@ featr:
   repositories:
     id001:
       remote: git@server:/repositories/dctnry.git
-      local: /repos/dctnry
+      local: /repos/Gherkin/testdata/bad
     id002:
       remote: git@server:/repositories/dctnry-client.git
-      local: /repos/front-end
+      local: /repos/Gherkin/testdata/good
 
   testSets:
-    - id: dictionary
+    - id: bad
       repository: id001
       testFileType: gherkin
       regExp: .*\.feature$
       type: functional
       level: integration
-    - id: front-end-unit
+    - id: good
       repository: id002
-      testFileType: javascript
-      regExp: src/test/.*\.spec\.js$
-      type: functional
-      level: unit
-    - id: front-end-integration
-      repository: id002
-      testFileType: javascript
-      regExp: src/browserTests/.*\.spec\.js$
+      testFileType: gherkin
+      regExp: .*\.feature$
       type: functional
       level: integration

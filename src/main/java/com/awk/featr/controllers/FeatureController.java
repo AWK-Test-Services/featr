@@ -3,7 +3,7 @@ package com.awk.featr.controllers;
 import com.awk.featr.configuration.FeatrConfiguration;
 import com.awk.featr.configuration.TestSetConfiguration;
 import com.awk.featr.services.FeatureService;
-import com.awk.featr.model.Feature;
+import com.awk.featr.model.gherkin.Feature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.awk.featr.services.RepositoryService;

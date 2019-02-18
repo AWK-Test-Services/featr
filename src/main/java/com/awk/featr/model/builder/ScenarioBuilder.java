@@ -1,39 +1,39 @@
 package com.awk.featr.model.builder;
 
-import com.awk.featr.model.Step;
-import com.awk.featr.model.Scenario;
+import com.awk.featr.model.gherkin.Step;
+import com.awk.featr.model.gherkin.Scenario;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FeatureChildBuilder {
+public class ScenarioBuilder {
 
     private String name;
     private List<Step> steps;
     private String description;
 
-    public FeatureChildBuilder(String name) {
+    public ScenarioBuilder(String name) {
         this.name = name;
         this.steps = new ArrayList<>();
         this.description = "";
     }
 
-    public FeatureChildBuilder withName(String name) {
+    public ScenarioBuilder withName(String name) {
         this.name = name;
         return this;
     }
 
-    public FeatureChildBuilder withSteps(List<Step> steps) {
+    public ScenarioBuilder withSteps(List<Step> steps) {
         this.steps = steps;
         return this;
     }
 
-    public FeatureChildBuilder withDescription(String description) {
+    public ScenarioBuilder withDescription(String description) {
         this.description = description;
         return this;
     }
 
     public Scenario build() {
-        return new Scenario(name, steps, description);
+        return new Scenario(name, description, steps);
     }
 }
